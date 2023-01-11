@@ -1,5 +1,8 @@
 import gzip 
 import re
+import tkinter as tk
+from tkinter import messagebox
+import tkinter.scrolledtext as st
 def read_words(file):
     L=[]
     with open(file, 'rt') as f:
@@ -76,21 +79,59 @@ def find_most_frequent_word(dict):
             occ=val[1]
     print(f'{most_frequent} found in {max} sequences and was found {occ} times')
     print(f'the percentage of the sequences containing this word compared to the total number of sequences containing english words is {(max/somme)*100}%')
-    occ=0
-    max=0
+    occ1=0
+    max1=0
     for key,val in dict.items():
-        if val[1] > occ :
-            occ=val[1]
-            most_frequent=key
-            max=val[0]
-    print(f'{most_frequent} was found {occ} times and was found in {max} sequences')
+        if val[1] > occ1 :
+            occ1=val[1]
+            most_frequent1=key
+            max1=val[0]
+    print(f'{most_frequent1} was found {occ1} times and was found in {max1} sequences')
+    #test
+    return most_frequent,occ,max,most_frequent1,occ1,max1
+    
     
 
 
 result=read_sequences(f)
 l=read_words(mots)
 res=search_words_in_proteome(l,result)
-find_most_frequent_word(res)
+m_f,occ,ma,mf1,occ1,ma1=find_most_frequent_word(res)
+
+
+#GUI part
+def show_most_freq():
+    messagebox.showinfo("Most frequent words",f'{m_f} found in {occ} sequences and was found {ma} times \n \
+                        {mf1} was found in {occ1} sequences and was found {ma1} times')
+
+window = tk.Tk()
+#title = tk.Label(text="Mini projet LPE-BI réalisé par Imen Ameur")
+#title.pack()
+window.title("Mini projet LPE-BI réalisé par Imen Ameur")
+#test=tk.Label(text=f'{m_f} was found {occ} times and was found in {ma} sequences')
+#test.pack()
+
+btn_words=tk.Button(text="most frequent word",command=show_most_freq)
+btn_words.pack()
+#test  
+text_area = st.ScrolledText(window,
+                            width = 30, 
+                            height = 8, 
+                            font = ("Times New Roman",
+                                    15))
+
+#text_area.grid(column = 0, pady = 10, padx = 10)
+
+# Inserting Text which is read only
+for key,val in res.items() :
+    text_area.insert(tk.INSERT,f'{key} found in {val[0]} sequences \n')
+
+# Making the text read only
+text_area.configure(state ='disabled') 
+text_area.pack()
+#end test
+#RUN the gui 
+window.mainloop()
 
 """result=read_sequences(f)
 i=0
